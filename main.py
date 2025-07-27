@@ -1,5 +1,4 @@
 import argparse
-from unittest import TestResult
 from langchain_ollama import OllamaLLM
 from langchain_core.prompts import PromptTemplate
 from langchain.chains.sequential import SequentialChain
