@@ -1,10 +1,9 @@
+import argparse
 from unittest import TestResult
 from langchain_ollama import OllamaLLM
 from langchain_core.prompts import PromptTemplate
 from langchain.chains.sequential import SequentialChain
 from langchain.chains import LLMChain
-
-import argparse
 
 
 parser = argparse.ArgumentParser()
@@ -30,18 +29,13 @@ test_chain = LLMChain(prompt=test_prompt, llm=llm, output_key="test")
 chain = SequentialChain(
     chains=[code_chain, test_chain],
     input_variables=["language", "tasks"],
-    output_variables=["code", "test"]
+    output_variables=["code", "test"],
 )
 
-result = chain.invoke(
-    {
-        "language": args.language, 
-        "tasks": args.tasks
-    }
-)
+result = chain.invoke({"language": args.language, "tasks": args.tasks})
 
 print(">>>>>>>>> GENERATED CODE:")
-print(result['code'])
+print(result["code"])
 
 print(">>>>>>>>> GENERATED TEST:")
-print(result['test'])
+print(result["test"])
