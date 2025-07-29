@@ -6,6 +6,8 @@ name = "pypi"
 [packages]
 langchain-community = "*"
 chromadb = "*"
+langchain = "*"
+langchain-ollama = "*"
 
 [dev-packages]
 
