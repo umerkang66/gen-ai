@@ -24,6 +24,6 @@ chain = RetrievalQA.from_chain_type(
     chain_type="stuff",
 )
 
-result = chain.run("How much percentage of world is left handed?")
+result = chain.run("which food is made without destroying any kind of life?")
 
 print(result)

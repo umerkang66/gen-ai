@@ -18,7 +18,7 @@ db = Chroma.from_documents(docs, embedding=embeddings, persist_directory="emb")
 
 
 results = db.similarity_search_with_score(
-    "How much percentage of world is left handed?"
+    "which food is made without destroying any kind of life?"
 )
 
 
