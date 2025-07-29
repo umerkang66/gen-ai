@@ -18,10 +18,11 @@ db = Chroma.from_documents(docs, embedding=embeddings, persist_directory="emb")
 
 
 results = db.similarity_search_with_score(
-    "What is an interesting fact about the english language", k=1
+    "How much percentage of world is left handed?"
 )
 
 
 for result in results:
     print("\n")
-    print(result)
+    print(result[1])
+    print(result[0].page_content)
