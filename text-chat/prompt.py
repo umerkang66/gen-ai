@@ -13,6 +13,8 @@ db = Chroma(
     embedding_function=embeddings,
 )
 
+# if we don't have the redundant data, use this
+# retriever = db.as_retriever()
 retriever = RedundantFilterRetriever(
     embeddings=embeddings,
     chroma=db,
