@@ -11,25 +11,39 @@
 
 	const scrollIntoView = (node: HTMLDivElement, _m: any) => {
 		setTimeout(() => {
-			node.scrollIntoView();
+			node.scrollIntoView({ behavior: 'smooth' });
 		}, 0);
 		return {
-			update: () => node.scrollIntoView()
+			update: () => node.scrollIntoView({ behavior: 'smooth' })
 		};
 	};
 </script>
 
-<div class="overflow-y-auto flex flex-col flex-1">
-	<div class="flex flex-col flex-1 gap-3 px-1.5 py-1">
-		{#each messages as message}
-			{#if message.role === 'user' || message.role === 'human'}
-				<UserMessage content={message.content} />
-			{:else if message.role === 'assistant' || message.role === 'ai'}
-				<AssistantMessage content={message.content} />
-			{:else if message.role === 'pending'}
-				<PendingMessage />
-			{/if}
-		{/each}
-	</div>
+<div class="flex flex-col space-y-6">
+	{#if messages.length === 0}
+		<div class="text-center py-12">
+			<div class="w-16 h-16 bg-gradient-to-r from-primary-500 to-secondary-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
+				<span class="material-icons text-white text-2xl">chat</span>
+			</div>
+			<h3 class="text-xl font-semibold text-neutral-800 dark:text-neutral-200 mb-2">
+				Start a Conversation
+			</h3>
+			<p class="text-neutral-600 dark:text-neutral-400 max-w-md mx-auto">
+				Ask questions about your documents and get intelligent responses from your AI assistant.
+			</p>
+		</div>
+	{:else}
+		<div class="space-y-6">
+			{#each messages as message}
+				{#if message.role === 'user' || message.role === 'human'}
+					<UserMessage content={message.content} />
+				{:else if message.role === 'assistant' || message.role === 'ai'}
+					<AssistantMessage content={message.content} />
+				{:else if message.role === 'pending'}
+					<PendingMessage />
+				{/if}
+			{/each}
+		</div>
+	{/if}
 	<div class="pt-4" use:scrollIntoView={messages} />
 </div>
