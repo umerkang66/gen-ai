@@ -9,13 +9,14 @@
 	let loading = false;
 	let uploadComplete = false;
 	let dragOver = false;
+	let fileInput: HTMLInputElement;
 
 	async function handleSubmit() {
 		if (!files || files.length === 0) return;
 		
 		loading = true;
-		await upload(files[0]);
-		if (!$documents.error) {
+		const result = await upload(files[0]);
+		if (result && !$documents.error) {
 			uploadComplete = true;
 
 			setTimeout(() => {
@@ -43,6 +44,14 @@
 		if (event.dataTransfer?.files) {
 			files = event.dataTransfer.files;
 		}
+	}
+
+	function handleFileButtonClick() {
+		fileInput?.click();
+	}
+
+	function handleFileChange() {
+		// File selection handled by binding, no automatic upload
 	}
 
 	beforeNavigate(clearErrors);
@@ -85,31 +94,44 @@
 					<div class="space-y-4">
 						<input
 							bind:files
+							bind:this={fileInput}
 							type="file"
 							accept=".pdf"
 							id="file-input"
 							class="hidden"
+							on:change={handleFileChange}
 						/>
-						<label for="file-input" class="cursor-pointer">
-							<Button variant="outline" size="lg">
-								<span class="material-icons mr-2">folder_open</span>
-								Choose File
-							</Button>
-						</label>
+						<button
+							type="button"
+							on:click={handleFileButtonClick}
+							class="inline-flex items-center justify-center font-medium rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed btn-outline px-8 py-4 text-lg"
+						>
+							<span class="material-icons mr-2">folder_open</span>
+							Choose File
+						</button>
 					</div>
 					
 					{#if files && files.length > 0}
-						<div class="mt-6 p-4 bg-green-50 dark:bg-green-900/20 rounded-xl">
+						<div class="mt-6 p-4 {loading ? 'bg-blue-50 dark:bg-blue-900/20' : uploadComplete ? 'bg-green-50 dark:bg-green-900/20' : 'bg-yellow-50 dark:bg-yellow-900/20'} rounded-xl">
 							<div class="flex items-center space-x-3">
-								<div class="w-8 h-8 bg-green-500 rounded-lg flex items-center justify-center">
-									<span class="material-icons text-white text-sm">check</span>
+								<div class="w-8 h-8 {loading ? 'bg-blue-500' : uploadComplete ? 'bg-green-500' : 'bg-yellow-500'} rounded-lg flex items-center justify-center">
+									<span class="material-icons text-white text-sm">
+										{loading ? 'upload' : uploadComplete ? 'check' : 'schedule'}
+									</span>
 								</div>
 								<div>
-									<p class="font-medium text-green-800 dark:text-green-200">
+									<p class="font-medium {loading ? 'text-blue-800 dark:text-blue-200' : uploadComplete ? 'text-green-800 dark:text-green-200' : 'text-yellow-800 dark:text-yellow-200'}">
 										{files[0].name}
 									</p>
-									<p class="text-sm text-green-600 dark:text-green-400">
+									<p class="text-sm {loading ? 'text-blue-600 dark:text-blue-400' : uploadComplete ? 'text-green-600 dark:text-green-400' : 'text-yellow-600 dark:text-yellow-400'}">
 										{(files[0].size / 1024 / 1024).toFixed(2)} MB
+										{#if loading}
+											- Uploading... ({$documents.uploadProgress}%)
+										{:else if uploadComplete}
+											- Upload Complete!
+										{:else}
+											- Ready to upload
+										{/if}
 									</p>
 								</div>
 							</div>
