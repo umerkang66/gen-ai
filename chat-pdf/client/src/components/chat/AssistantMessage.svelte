@@ -1,51 +1,20 @@
 <script lang="ts">
 	import { marked } from 'marked';
-	import classnames from 'classnames';
-	import { scoreConversation } from '$s/chat';
-	import Icon from '$c/Icon.svelte';
 
 	export let content = '';
-	let score = 0;
-
-	const klass = 'border rounded-full inline-block cursor-pointer hover:bg-slate-200';
-	$: upKlass = classnames(klass, {
-		'bg-slate-200': score === 1
-	});
-	$: downKlass = classnames(klass, {
-		'bg-slate-200': score === -1
-	});
-
-	async function applyScore(_score: number) {
-		if (score !== 0) {
-			return;
-		}
-		score = _score;
-		return scoreConversation(_score);
-	}
 </script>
 
-<div class="flex flex-row items-center justify-between">
-	<div
-		class="message border rounded-md py-1.5 px-2.5 my-0.25 break-words self-start bg-blue-500 text-gray-100"
-	>
-		{@html marked(content, { breaks: true, gfm: true })}
-	</div>
-	<div class="flex flex-row flex-1 items-start gap-1 flex-wrap justify-center">
-		{#if score >= 0}
-			<div class={upKlass} style="line-height: 12px; padding: 6px;">
-				<Icon on:click={() => applyScore(1)} name="thumb_up" outlined />
+<div class="flex justify-start">
+	<div class="max-w-2xl">
+		<div class="flex items-start space-x-2">
+			<div class="w-6 h-6 bg-gradient-to-br from-accent-500 to-primary-500 rounded-full flex items-center justify-center shadow-soft flex-shrink-0">
+				<span class="material-icons text-white text-xs">smart_toy</span>
 			</div>
-		{/if}
-		{#if score <= 0}
-			<div class={downKlass} style="line-height: 12px; padding: 6px;">
-				<Icon on:click={() => applyScore(-1)} name="thumb_down" outlined />
+			<div class="glass-effect rounded-xl rounded-bl-md px-4 py-3 shadow-soft">
+				<div class="prose prose-secondary max-w-none text-sm">
+					{@html marked(content, { breaks: true, gfm: true })}
+				</div>
 			</div>
-		{/if}
+		</div>
 	</div>
 </div>
-
-<style>
-	.message {
-		max-width: 80%;
-	}
-</style>

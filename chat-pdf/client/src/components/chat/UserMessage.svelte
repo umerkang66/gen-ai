@@ -4,12 +4,18 @@
 	export let content = '';
 </script>
 
-<div class="message border rounded-md py-1 px-2.5 my-0.25 break-words self-end bg-slate-200">
-	{@html marked(content, { breaks: true, gfm: true })}
+<div class="flex justify-end">
+	<div class="max-w-2xl">
+		<div class="flex items-start space-x-2">
+			<div class="flex-1"></div>
+			<div class="bg-gradient-to-r from-primary-600 to-accent-600 text-white rounded-xl rounded-br-md px-4 py-3 shadow-soft">
+				<div class="prose prose-invert max-w-none text-sm">
+					{@html marked(content, { breaks: true, gfm: true })}
+				</div>
+			</div>
+			<div class="w-6 h-6 bg-gradient-to-br from-primary-500 to-accent-500 rounded-full flex items-center justify-center shadow-soft flex-shrink-0">
+				<span class="material-icons text-white text-xs">person</span>
+			</div>
+		</div>
+	</div>
 </div>
-
-<style>
-	.message {
-		max-width: 80%;
-	}
-</style>

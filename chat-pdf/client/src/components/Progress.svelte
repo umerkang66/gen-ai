@@ -13,11 +13,17 @@
 {#if $$slots.default && $width === 100}
 	<slot />
 {:else}
-	<div class="flex my-3 w-full h-1.5 bg-gray-200 rounded-full overflow-hidden dark:bg-gray-700">
-		<div
-			class="flex flex-col justify-center overflow-hidden bg-blue-800"
-			role="progressbar"
-			style="width: {$width}%"
-		/>
+	<div class="space-y-2">
+		<div class="flex justify-between text-sm text-secondary-600">
+			<span>Uploading...</span>
+			<span>{Math.round($width)}%</span>
+		</div>
+		<div class="w-full h-2 bg-secondary-200 rounded-full overflow-hidden">
+			<div
+				class="h-full bg-gradient-to-r from-primary-500 to-accent-500 rounded-full transition-all duration-300 ease-out"
+				role="progressbar"
+				style="width: {$width}%"
+			/>
+		</div>
 	</div>
 {/if}

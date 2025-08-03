@@ -18,7 +18,9 @@
 </script>
 
 <ErrorModal />
-<div class="container mx-auto h-screen">
+<div class="min-h-screen bg-gradient-to-br from-secondary-50 via-white to-primary-50">
 	<Navbar />
-	<slot />
+	<main class="container mx-auto px-4 py-8 max-w-7xl">
+		<slot />
+	</main>
 </div>

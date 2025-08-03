@@ -8,7 +8,6 @@
 
 	async function handleClick(conversation: Conversation) {
 		isOpen = false;
-
 		setActiveConversationId(conversation.id);
 	}
 
@@ -22,47 +21,42 @@
 </script>
 
 <div class="relative inline-block text-left">
-	<div>
-		<button
-			on:click={() => (isOpen = !isOpen)}
-			type="button"
-			class="inline-flex justify-center w-full px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-			id="options-menu"
-			aria-haspopup="true"
-			aria-expanded="true"
-		>
-			History
-			<svg
-				class="-mr-1 ml-2 h-5 w-5"
-				xmlns="http://www.w3.org/2000/svg"
-				viewBox="0 0 20 20"
-				fill="currentColor"
-				aria-hidden="true"
-			>
-				<path
-					fill-rule="evenodd"
-					d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-					clip-rule="evenodd"
-				/>
-			</svg>
-		</button>
-	</div>
+	<button
+		on:click={() => (isOpen = !isOpen)}
+		type="button"
+		class="btn-secondary text-xs px-2 py-1 flex items-center space-x-1"
+		id="options-menu"
+		aria-haspopup="true"
+		aria-expanded={isOpen}
+	>
+		<span class="material-icons text-xs">history</span>
+		<span class="hidden sm:inline">History</span>
+		<span class="material-icons text-xs transition-transform duration-200 {isOpen ? 'rotate-180' : ''}">expand_more</span>
+	</button>
 
 	{#if isOpen}
 		<div
-			class="origin-top-right overflow-y-scroll absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5"
-			style="max-width: 250px; max-height: 250px;"
+			class="absolute right-0 mt-1 w-48 rounded-xl shadow-medium glass-effect border border-white/20 overflow-hidden z-50"
+			style="max-height: 200px;"
 		>
-			<div class="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
-				{#each conversations as conversation (conversation)}
-					<div
-						class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
-						on:click={() => handleClick(conversation)}
-						on:keypress={() => {}}
-					>
-						{conversation.id}
+			<div class="p-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
+				{#if conversations.length === 0}
+					<div class="px-3 py-2 text-xs text-secondary-500 text-center">
+						No history
 					</div>
-				{/each}
+				{:else}
+					{#each conversations as conversation (conversation.id)}
+						<button
+							class="w-full text-left px-3 py-2 text-xs text-secondary-700 hover:bg-white/50 hover:text-primary-600 rounded-lg transition-all duration-200 flex items-center space-x-2"
+							on:click={() => handleClick(conversation)}
+						>
+							<span class="material-icons text-secondary-400 text-xs">chat_bubble_outline</span>
+							<span class="font-mono text-xs bg-secondary-100 px-1 py-0.5 rounded text-xs">
+								{conversation.id}
+							</span>
+						</button>
+					{/each}
+				{/if}
 			</div>
 		</div>
 	{/if}
