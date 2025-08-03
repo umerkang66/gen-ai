@@ -11,7 +11,7 @@ const _addPendingMessage = (message: Message, pendingId: number) => {
 	});
 };
 
-export const sendMessage = async (message: Message, opts?: any) => {
+export const sendMessage = async (message: Message) => {
 	set({ loading: true });
 	const pendingId = Math.random();
 	try {

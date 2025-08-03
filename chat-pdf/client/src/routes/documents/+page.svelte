@@ -1,7 +1,6 @@
 <script lang="ts">
 	import type { PageData } from './$types';
 	import AuthGuard from '$c/AuthGuard.svelte';
-	import Button from '$c/Button.svelte';
 
 	export let data: PageData;
 
@@ -9,143 +8,59 @@
 </script>
 
 <AuthGuard />
-
-<div class="min-h-screen py-8">
-	<!-- Header Section -->
-	<div class="text-center mb-12 animate-fade-in">
-		<h1 class="text-4xl md:text-6xl font-display font-bold text-neutral-800 dark:text-white mb-4">
-			Your 
-			<span class="gradient-text">Documents</span>
-		</h1>
-		<p class="text-xl text-neutral-600 dark:text-neutral-300 max-w-2xl mx-auto">
-			Manage and interact with your uploaded PDF documents
-		</p>
+<div class="flex flex-row justify-between items-center my-4">
+	<h2 class="text-3xl font-bold m-2">Your Documents</h2>
+	<div class="">
+		<a
+			href="/documents/new"
+			class="py-2 px-4 inline-flex justify-center items-center gap-2 rounded-md border border-transparent font-semibold bg-blue-500 text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all dark:focus:ring-offset-gray-800"
+			>New</a
+		>
 	</div>
+</div>
 
-	<!-- Action Bar -->
-	<div class="flex justify-between items-center mb-8">
-		<div class="flex items-center space-x-4">
-			<div class="flex items-center space-x-2">
-				<div class="w-8 h-8 bg-gradient-to-r from-primary-500 to-secondary-500 rounded-lg flex items-center justify-center">
-					<span class="material-icons text-white text-sm">description</span>
-				</div>
-				<span class="text-lg font-semibold text-neutral-800 dark:text-neutral-200">
-					{documents.length} Document{documents.length !== 1 ? 's' : ''}
-				</span>
+<div class="flex flex-col">
+	<div class="-m-1.5 overflow-x-auto">
+		<div class="p-1.5 min-w-full inline-block align-middle">
+			<div class="border rounded-lg overflow-hidden">
+				<table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+					<thead class="bg-gray-50">
+						<tr>
+							<th
+								scope="col"
+								class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Name</th
+							>
+							<th
+								scope="col"
+								class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">ID</th
+							>
+							<th
+								scope="col"
+								class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Action</th
+							>
+						</tr>
+					</thead>
+
+					<tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+						{#each documents as document}
+							<tr class="hover:bg-gray-100 dark:hover:bg-gray-700">
+								<td
+									class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200"
+									>{document.name}</td
+								>
+								<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200"
+									>{document.id}</td
+								>
+								<td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+									<a class="text-blue-500 hover:text-blue-700" href="/documents/{document.id}"
+										>View</a
+									>
+								</td>
+							</tr>
+						{/each}
+					</tbody>
+				</table>
 			</div>
 		</div>
-		
-		<a href="/documents/new">
-			<Button variant="primary" size="lg">
-				<span class="material-icons mr-2">upload_file</span>
-				Upload Document
-			</Button>
-		</a>
 	</div>
-
-	<!-- Documents Grid -->
-	{#if documents.length === 0}
-		<div class="text-center py-16">
-			<div class="w-24 h-24 bg-gradient-to-r from-primary-500 to-secondary-500 rounded-3xl flex items-center justify-center mx-auto mb-6">
-				<span class="material-icons text-white text-4xl">upload_file</span>
-			</div>
-			<h3 class="text-2xl font-semibold text-neutral-800 dark:text-neutral-200 mb-4">
-				No Documents Yet
-			</h3>
-			<p class="text-neutral-600 dark:text-neutral-400 max-w-md mx-auto mb-8">
-				Upload your first PDF document to start chatting with your content. 
-				Simply drag and drop or click to upload.
-			</p>
-			<a href="/documents/new">
-				<Button variant="primary" size="lg">
-					<span class="material-icons mr-2">upload_file</span>
-					Upload Your First Document
-				</Button>
-			</a>
-		</div>
-	{:else}
-		<div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-			{#each documents as document}
-				<div class="card p-6 hover:scale-105 transition-all duration-200 animate-slide-up">
-					<div class="flex items-start justify-between mb-4">
-						<div class="w-12 h-12 bg-gradient-to-r from-primary-500 to-primary-600 rounded-xl flex items-center justify-center">
-							<span class="material-icons text-white text-xl">description</span>
-						</div>
-						<div class="flex items-center space-x-2">
-							<span class="text-xs bg-green-100 dark:bg-green-900/20 text-green-800 dark:text-green-400 px-2 py-1 rounded-full">
-								Active
-							</span>
-						</div>
-					</div>
-					
-					<h3 class="text-lg font-semibold text-neutral-800 dark:text-neutral-200 mb-2 line-clamp-2">
-						{document.name}
-					</h3>
-					
-					<div class="flex items-center justify-between mt-4">
-						<div class="flex items-center space-x-2 text-sm text-neutral-500 dark:text-neutral-400">
-							<span class="material-icons text-sm">info</span>
-							<span>ID: {document.id}</span>
-						</div>
-						
-						<div class="flex items-center space-x-2">
-							<a href="/documents/{document.id}" class="group">
-								<div class="w-8 h-8 bg-gradient-to-r from-primary-500 to-primary-600 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-200">
-									<span class="material-icons text-white text-sm">visibility</span>
-								</div>
-							</a>
-							<a href="/chat?document={document.id}" class="group">
-								<div class="w-8 h-8 bg-gradient-to-r from-secondary-500 to-secondary-600 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-200">
-									<span class="material-icons text-white text-sm">chat</span>
-								</div>
-							</a>
-						</div>
-					</div>
-				</div>
-			{/each}
-		</div>
-	{/if}
-
-	<!-- Quick Actions -->
-	{#if documents.length > 0}
-		<div class="mt-12 card p-8">
-			<h3 class="text-2xl font-display font-bold text-neutral-800 dark:text-neutral-200 mb-6">
-				Quick Actions
-			</h3>
-			<div class="grid md:grid-cols-3 gap-6">
-				<div class="text-center space-y-3">
-					<div class="w-16 h-16 bg-gradient-to-r from-primary-500 to-primary-600 rounded-2xl flex items-center justify-center mx-auto">
-						<span class="material-icons text-white text-2xl">upload_file</span>
-					</div>
-					<h4 class="text-lg font-semibold text-neutral-800 dark:text-neutral-200">Upload More</h4>
-					<p class="text-sm text-neutral-600 dark:text-neutral-400">Add more documents to your collection</p>
-					<a href="/documents/new">
-						<Button variant="outline" size="sm">Upload</Button>
-					</a>
-				</div>
-				
-				<div class="text-center space-y-3">
-					<div class="w-16 h-16 bg-gradient-to-r from-secondary-500 to-secondary-600 rounded-2xl flex items-center justify-center mx-auto">
-						<span class="material-icons text-white text-2xl">chat</span>
-					</div>
-					<h4 class="text-lg font-semibold text-neutral-800 dark:text-neutral-200">Start Chatting</h4>
-					<p class="text-sm text-neutral-600 dark:text-neutral-400">Begin a conversation with your documents</p>
-					<a href="/chat">
-						<Button variant="outline" size="sm">Chat</Button>
-					</a>
-				</div>
-				
-				<div class="text-center space-y-3">
-					<div class="w-16 h-16 bg-gradient-to-r from-accent-500 to-accent-600 rounded-2xl flex items-center justify-center mx-auto">
-						<span class="material-icons text-white text-2xl">analytics</span>
-					</div>
-					<h4 class="text-lg font-semibold text-neutral-800 dark:text-neutral-200">View Analytics</h4>
-					<p class="text-sm text-neutral-600 dark:text-neutral-400">Check performance and insights</p>
-					<a href="/scores">
-						<Button variant="outline" size="sm">Analytics</Button>
-					</a>
-				</div>
-			</div>
-		</div>
-	{/if}
 </div>

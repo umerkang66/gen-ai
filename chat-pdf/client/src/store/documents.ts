@@ -39,21 +39,11 @@ const upload = async (file: File) => {
 		const formData = new FormData();
 		formData.append('file', file);
 
-		const response = await api.post('/pdfs', formData, {
-			onUploadProgress: (event) => {
-				// Only show up to 90% during file upload, reserve 10% for server processing
-				const uploadProgress = Math.round((event.loaded / event.total) * 90);
-				set({ uploadProgress });
-			}
+		await api.post('/pdfs', formData, {
+			onUploadProgress: setUploadProgress
 		});
-		
-		// Set to 100% only when the response is received
-		set({ uploadProgress: 100 });
-		
-		return response.data;
 	} catch (error) {
-		set({ error: getErrorMessage(error) });
-		return null;
+		return set({ error: getErrorMessage(error) });
 	}
 };
 

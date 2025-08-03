@@ -1,12 +1,9 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte';
-	import Button from '$c/Button.svelte';
 
 	let value = '';
-	let textarea: HTMLTextAreaElement;
 
 	const dispatch = createEventDispatcher();
-	
 	function handleKeyDown(event: KeyboardEvent) {
 		const isCombo = event.shiftKey || event.ctrlKey || event.altKey || event.metaKey;
 		if (event.key !== 'Enter' || isCombo) {
@@ -19,58 +16,16 @@
 		}
 
 		event.preventDefault();
-		submitMessage();
+		dispatch('submit', value);
+		value = '';
 	}
 
-	function submitMessage() {
-		console.log('submitMessage called, value:', value);
-		if (value.trim()) {
-			console.log('Dispatching submit event with value:', value);
-			dispatch('submit', value);
-			value = '';
-			// Reset textarea height
-			if (textarea) {
-				textarea.style.height = 'auto';
-			}
-		} else {
-			console.log('Value is empty, not submitting');
-		}
-	}
-
-	function adjustHeight() {
-		if (textarea) {
-			textarea.style.height = 'auto';
-			textarea.style.height = Math.min(textarea.scrollHeight, 200) + 'px';
-		}
-	}
-
-	$: if (value !== undefined) {
-		setTimeout(adjustHeight, 0);
-	}
+	$: height = (value.match(/\n/g)?.length || 0) * 25 + 72;
 </script>
 
-<div class="flex items-end space-x-3">
-	<div class="flex-1 relative">
-		<textarea
-			bind:this={textarea}
-			bind:value
-			on:keydown={handleKeyDown}
-			placeholder="Ask from document..."
-			class="w-full px-4 py-3 pr-12 bg-white/70 dark:bg-neutral-800/70 border border-neutral-200 dark:border-neutral-700 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-200 resize-none min-h-[48px] max-h-[200px] text-neutral-800 dark:text-neutral-200 placeholder-neutral-500 dark:placeholder-neutral-400"
-			rows="1"
-		/>
-	</div>
-	
-	<Button 
-		variant="primary" 
-		size="md" 
-		on:click={() => {
-			console.log('Button clicked!');
-			submitMessage();
-		}}
-		disabled={!value.trim()}
-		class="flex-shrink-0"
-	>
-		<span class="material-icons">send</span>
-	</Button>
-</div>
+<textarea
+	class="w-full mx-auto py-1.5 px-2.5 resize-none border rounded max-h-40"
+	style:height={height + 'px'}
+	bind:value
+	on:keydown={handleKeyDown}
+/>

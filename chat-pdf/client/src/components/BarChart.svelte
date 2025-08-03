@@ -21,8 +21,6 @@
 		new Chart(ctx, {
 			type: 'bar',
 			options: {
-				responsive: true,
-				maintainAspectRatio: false,
 				plugins: {
 					legend: { display: false }
 				},
@@ -37,19 +35,15 @@
 						ticks: {
 							stepSize: 0.33,
 							font: {
-								size: 14,
-								family: 'Inter'
-							},
-							color: '#6b7280'
+								size: 15
+							}
 						}
 					},
 					x: {
 						ticks: {
 							font: {
-								size: 16,
-								family: 'Inter'
-							},
-							color: '#374151'
+								size: 20
+							}
 						}
 					}
 				}
@@ -63,9 +57,7 @@
 						data: chartValues,
 						backgroundColor: generateColors(startingColor, 7, 0.2),
 						borderColor: generateColors(startingColor, 7),
-						borderWidth: 2,
-						borderRadius: 8,
-						borderSkipped: false
+						borderWidth: 1
 					}
 				]
 			}
@@ -145,6 +137,4 @@
 	const colors = generateColors({ r: 255, g: 99, b: 132 }, 7);
 </script>
 
-<div class="h-80">
-	<canvas bind:this={chartCanvas} />
-</div>
+<canvas bind:this={chartCanvas} />
