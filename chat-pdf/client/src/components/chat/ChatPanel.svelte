@@ -14,7 +14,7 @@
 	import Button from '$c/Button.svelte';
 
 	export let onSubmit: (text: string, useStreaming: boolean) => void;
-	export let documentId: number;
+	export let documentId: string | number;
 
 	let useStreaming = !!localStorage.getItem('streaming');
 

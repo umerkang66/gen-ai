@@ -23,7 +23,7 @@ const _appendResponse = (id: number, text: string) => {
 	});
 };
 
-export const sendMessage = async (userMessage: Message) => {
+export const sendMessage = async (userMessage: Message, opts?: any) => {
 	const conversation = getActiveConversation();
 
 	if (!conversation) {

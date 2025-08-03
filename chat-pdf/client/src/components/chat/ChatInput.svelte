@@ -23,13 +23,17 @@
 	}
 
 	function submitMessage() {
+		console.log('submitMessage called, value:', value);
 		if (value.trim()) {
+			console.log('Dispatching submit event with value:', value);
 			dispatch('submit', value);
 			value = '';
 			// Reset textarea height
 			if (textarea) {
 				textarea.style.height = 'auto';
 			}
+		} else {
+			console.log('Value is empty, not submitting');
 		}
 	}
 
@@ -60,7 +64,10 @@
 	<Button 
 		variant="primary" 
 		size="md" 
-		on:click={submitMessage}
+		on:click={() => {
+			console.log('Button clicked!');
+			submitMessage();
+		}}
 		disabled={!value.trim()}
 		class="flex-shrink-0"
 	>
