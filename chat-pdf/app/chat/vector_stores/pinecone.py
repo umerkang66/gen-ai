@@ -10,8 +10,8 @@ p = pinecone.Pinecone(
 )
 
 vector_store = Pinecone.from_existing_index(
-    index_name=os.getenv("PINECONE_INDEX_NAME"),
-    embedding=embeddings,
+    os.getenv("PINECONE_INDEX_NAME"),
+    embeddings,
 )
 
 
