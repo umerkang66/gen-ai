@@ -1,5 +1,5 @@
-# Langchain Course (Stephen Grider)
- 
+# Langchain Code (From Stephen Grider Course)
+
 - Pycode (A Code Generator of any language)
 - Chatbot
 - TextChart (Chat with text document)
