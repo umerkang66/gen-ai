@@ -1,162 +1,168 @@
-# First Time Setup
+# Chat-PDF 📄💬
 
-## Using Pipenv [Recommended]
+Chat-PDF is a full-stack web application that transforms your static PDF documents into interactive conversational partners. Upload a PDF and start asking questions, summarizing content, and finding information instantly.
+
+This project is built with a modern tech stack, leveraging the power of Large Language Models (LLMs) and Retrieval-Augmented Generation (RAG) to provide a seamless and intuitive user experience.
+
+## ✨ Features
+
+- **Interactive Chat Interface:** Converse with your documents in a natural, real-time chat.
+- **Secure User Authentication:** User accounts and secure sessions.
+- **PDF Upload & Processing:** Asynchronous processing of uploaded PDFs using a background worker.
+- **Conversation History:** Your conversations with each document are saved and can be revisited.
+- **Streaming Responses:** Assistant responses are streamed in real-time for a better user experience.
+- **Built on RAG:** Utilizes a robust Retrieval-Augmented Generation architecture for accurate, context-aware answers.
+
+## 🏗️ Architecture Overview
+
+The application uses a Retrieval-Augmented Generation (RAG) architecture. The flow is as follows:
 
 ```
-# Install dependencies
+1. User Uploads PDF
+      │
+      └───> Backend API (FastAPI)
+                  │
+                  └───> Background Worker (Celery)
+                              │
+                              ├───> 1. Chunks PDF text
+                              ├───> 2. Creates embeddings (OpenAI)
+                              └───> 3. Stores in Vector DB (Pinecone)
+
+2. User Asks a Question
+      │
+      └───> Frontend (Svelte)
+                  │
+                  └───> Backend API (FastAPI)
+                              │
+                              ├───> 1. Creates embedding for question
+                              ├───> 2. Queries Vector DB for relevant context
+                              ├───> 3. Constructs prompt with context
+                              ├───> 4. Gets streaming response from LLM (OpenAI)
+                              │
+                              └───> Streams response back to Frontend
+```
+
+## 🛠️ Tech Stack
+
+**Backend:**
+
+- **Framework:** FastAPI
+- **Async Tasks:** Celery with Redis
+- **Database:** SQLAlchemy (connects to PostgreSQL, SQLite, etc.)
+- **AI/LLM Orchestration:** LangChain
+- **LLM & Embeddings:** OpenAI
+- **Vector Database:** Pinecone
+- **Dependency Management:** Pipenv
+
+**Frontend:**
+
+- **Framework:** SvelteKit
+- **Build Tool:** Vite
+- **Styling:** Tailwind CSS
+- **UI Components:** Preline UI
+
+## 🚀 Getting Started
+
+Follow these instructions to set up and run the project locally.
+
+### Prerequisites
+
+- Python 3.10+
+- Pipenv: `pip install pipenv`
+- Node.js and npm
+
+### 1. Clone the Repository
+
+```bash
+git clone <repository-url>
+cd chat-pdf
+```
+
+### 2. Backend Setup
+
+The backend is managed with `pipenv`.
+
+**a. Configure Environment Variables:**
+
+Create a `.env` file in the root directory by copying the example file.
+
+```bash
+cp .env.example .env
+```
+
+Now, open the `.env` file and fill in the required API keys and configuration values:
+
+```ini
+OPENAI_API_KEY=sk-...
+SECRET_KEY=a-very-secret-key
+SQLALCHEMY_DATABASE_URI=sqlite:///sqlite.db  # Or your postgres URI
+REDIS_URI=redis://localhost:6379/0
+PINECONE_API_KEY=...
+PINECONE_ENV_NAME=...
+PINECONE_INDEX_NAME=...
+# Optional for LangSmith tracing
+LANGFUSE_PUBLIC_KEY=...
+LANGFUSE_SECRET_KEY=...
+```
+
+**b. Install Dependencies:**
+
+Use `pipenv` to install the required Python packages. This will create a virtual environment.
+
+```bash
 pipenv install
-
-# Create a virtual environment
-pipenv shell
-
-# Initialize the database
-flask --app app.web init-db
-
 ```
 
-## Using Venv [Optional]
+**c. Initialize the Database:**
 
-These instructions are included if you wish to use venv to manage your evironment and dependencies instead of Pipenv.
+Run the command to create the database tables.
 
-```
-# Create the venv virtual environment
-python -m venv .venv
-
-# On MacOS, WSL, Linux
-source .venv/bin/activate
-
-# On Windows
-.\.venv\Scripts\activate
-
-# Install dependencies
-pip install -r requirements.txt
-
-# Initialize the database
-flask --app app.web init-db
+```bash
+pipenv run invoke create_db
 ```
 
-# Running the app [Pipenv]
+**d. Run the Backend Servers:**
 
-There are three separate processes that need to be running for the app to work: the server, the worker, and Redis.
+You need to run two processes: the web server and the celery worker.
 
-If you stop any of these processes, you will need to start them back up!
+- **Terminal 1: Start the FastAPI Web Server:**
 
-Commands to start each are listed below. If you need to stop them, select the terminal window the process is running in and press Control-C
+  ```bash
+  pipenv run invoke dev
+  ```
 
-### To run the Python server
+  The API will be available at `http://127.0.0.1:8000`.
 
-Open a new terminal window and create a new virtual environment:
+- **Terminal 2: Start the Celery Worker:**
+  ```bash
+  pipenv run invoke devworker
+  ```
+  The worker will automatically pick up PDF processing tasks.
 
-```
-pipenv shell
-```
+### 3. Frontend Setup
 
-Then:
+The frontend is a SvelteKit application located in the `client` directory.
 
-```
-inv dev
-```
+**a. Navigate to the Client Directory:**
 
-### To run the worker
-
-Open a new terminal window and create a new virtual environment:
-
-```
-pipenv shell
+```bash
+cd client
 ```
 
-Then:
+**b. Install Dependencies:**
 
-```
-inv devworker
-```
-
-### To run Redis
-
-```
-redis-server
+```bash
+npm install
 ```
 
-### To reset the database
+**c. Run the Frontend Development Server:**
 
-Open a new terminal window and create a new virtual environment:
-
-```
-pipenv shell
+```bash
+npm run dev
 ```
 
-Then:
+The application will be available at `http://localhost:5173`.
 
-```
-flask --app app.web init-db
-```
+## 📝 License
 
-# Running the app [Venv]
-
-_These instructions are included if you wish to use venv to manage your evironment and dependencies instead of Pipenv._
-
-There are three separate processes that need to be running for the app to work: the server, the worker, and Redis.
-
-If you stop any of these processes, you will need to start them back up!
-
-Commands to start each are listed below. If you need to stop them, select the terminal window the process is running in and press Control-C
-
-### To run the Python server
-
-Open a new terminal window and create a new virtual environment:
-
-```
-# On MacOS, WSL, Linux
-source .venv/bin/activate
-
-# On Windows
-.\.venv\Scripts\activate
-```
-
-Then:
-
-```
-inv dev
-```
-
-### To run the worker
-
-Open a new terminal window and create a new virtual environment:
-
-```
-# On MacOS, WSL, Linux
-source .venv/bin/activate
-
-# On Windows
-.\.venv\Scripts\activate
-```
-
-Then:
-
-```
-inv devworker
-```
-
-### To run Redis
-
-```
-redis-server
-```
-
-### To reset the database
-
-Open a new terminal window and create a new virtual environment:
-
-```
-# On MacOS, WSL, Linux
-source .venv/bin/activate
-
-# On Windows
-.\.venv\Scripts\activate
-```
-
-Then:
-
-```
-flask --app app.web init-db
-```
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
