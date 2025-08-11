@@ -158,10 +158,10 @@ npm install
 **c. Run the Frontend Development Server:**
 
 ```bash
-npm run dev
+npm run build
 ```
 
-The application will be available at `http://localhost:5173`.
+The application will be available serve through backend `http://localhost:8000`.
 
 ## 📝 License
 
